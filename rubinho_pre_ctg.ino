@@ -69,19 +69,26 @@ void loop() {
 //  }
         //Controle partida chegada
          if ((flagCruzamento == 0) && (spcRead == 1)) {   //largada
-           flagCruzamento = 1;
+           flagCruzamento = 1;      //Estado 1
+           
+         }
+         else if ((flagCruzamento ==1) && (spcRead == 0)){
+            flagCruzamento = 4; 
          }
          
-         if ((seRead > meio) && (smRead>meio) &&(sdRead>meio)){   //Cruzamento  - sensor do meio
-            if (flagCruzamento == 1){
+         else if ((seRead > meio) && (smRead>meio) &&(sdRead>meio)){   //Cruzamento  - sensor do meio
+            if (flagCruzamento == 4){
                  flagCruzamento = 2; 
             }
           }
           
-          if ((flagCruzamento == 2) && (spcRead == 1)){      //Cruzamento - sensor traseiro
-                 flagCruzamento = 1; 
+          else if ((flagCruzamento == 2) && (spcRead == 1)){      //Cruzamento - sensor traseiro
+                 flagCruzamento = 3; 
           }
-          else if ((spcRead == 1) && (flagCruzamento == 1)){         //Chegada
+          else if ((flagCruzamento == 3 ) && (spcRead==0)) { //cruzamento
+                flagCruzamento = 4;
+          }
+          else if ((spcRead == 1) && (flagCruzamento == 4)){         //Chegada
             off();  
             delay(20000);
             
@@ -125,7 +132,7 @@ void loop() {
   Serial.print(spcRead);
   Serial.println("");
   Serial.print("contador ");
-  Serial.println(flagPC);
+  Serial.println(flagCruzamento);
 
 
 }
@@ -143,7 +150,7 @@ void forward()
 void left()
 {
   digitalWrite(md1, LOW);
-  digitalWrite(md2, HIGH);
+  digitalWrite(md2, HIGH);//MUDEI AQUI PRA LOW
   digitalWrite(me1, HIGH);
   digitalWrite(me2, LOW);
 
@@ -151,10 +158,10 @@ void left()
 
 void right()
 {
-  digitalWrite(md1, HIGH);
-  digitalWrite(md2, LOW);
+    digitalWrite(md1, HIGH);
+    digitalWrite(md2, LOW);
     digitalWrite(me1, LOW);
-    digitalWrite(me2, HIGH);
+    digitalWrite(me2, HIGH);//MUDEI AQUI PEA LOW 
 }
 
 void backward()
