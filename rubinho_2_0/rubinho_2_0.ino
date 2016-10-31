@@ -1,23 +1,30 @@
-/*int le = 7;*
-int lm = 6;*
-int ld = 5;*
-int lsc = 4;*
-*/
+int le = 3;
+int lm = 4;
+int ld = 5;
+int lscE = 2;
+int lscD = 6;
 
-int md2 = 7;
-int md1 = 8;
-int me1 = 13;
-int me2 = 12;
 
+
+int md1 = 7;
+int md2 = 8;
+int pwmMD = 9;
+
+int me1 = 12;
+int me2 = 13;
+int pwmME = 11;
+
+int se = A0;
 int sm = A1;
 int sd = A2;
-int se = A0;
-int spc = A3;
+int spcE = A3;
+int spcD = A4;
 
 int smRead;
 int seRead;
 int sdRead;
-int spcRead;
+int spcERead;
+int spcDRead;
 
 //int meio = 511;
 int meio = 600;
@@ -27,34 +34,44 @@ int flagCruzamento = 0;
 
 void setup() {
   // put your setup code here, to run once:
+  // ligar os sensores
+  pinMode(le, OUTPUT);
+  pinMode(lm, OUTPUT);
+  pinMode(ld, OUTPUT);
+  pinMode(lscE, OUTPUT);
+  pinMode(lscD, OUTPUT);
+  
+  digitalWrite(le, HIGH);
+  digitalWrite(ld, HIGH);
+  digitalWrite(lm, HIGH);
+  digitalWrite(lscE, HIGH);
+  digitalWrite(lscD,HIGH);
+  // fim
+  // declarar os sensores
   pinMode(sm, INPUT);
   pinMode(sd, INPUT);
   pinMode(se, INPUT);
-  pinMode(spc, INPUT);
+  pinMode(spcE, INPUT);
+  pinMode(spcD, INPUT);
+  // fim
+  // declarar os motores 
   pinMode(md1, OUTPUT);
   pinMode(md2, OUTPUT);
   pinMode(me1, OUTPUT);
   pinMode(me2, OUTPUT);
-  pinMode(le, OUTPUT);
-  pinMode(lm, OUTPUT);
-  pinMode(ld, OUTPUT);
-  pinMode(lsc, OUTPUT);
+  // fim
+  //declarar comunicar serial
   Serial.begin(9600);
-  digitalWrite(le, HIGH);
-  digitalWrite(ld, HIGH);
-  digitalWrite(lm, HIGH);
-  digitalWrite(lsc, HIGH);
+  //fim
 }
 
 void loop() {
-        
-  
-        
+               
   smRead = analogRead(sm);
   seRead = analogRead(se);
   sdRead = analogRead(sd);
-  spcRead = digitalRead(spc);
-  
+  spcERead = digitalRead(spcE);
+  spcDRead = digitalRead(spcD);
    
 //    if ((flagPC ==0) && (spcRead ==1) && (smRead >meio)&&(seRead <meio)&&(sdRead<meio)){
 //       flagPC = 1; 
@@ -69,11 +86,11 @@ void loop() {
 //      delay(20000);
 //  }
         //Controle partida chegada
-         if ((flagCruzamento == 0) && (spcRead == 1)) {   //largada
+         if ((flagCruzamento == 0) && (spcDRead == 1)) {   //largada
            flagCruzamento = 1;      //Estado 1
            
          }
-         else if ((flagCruzamento ==1) && (spcRead == 0)){
+         else if ((flagCruzamento ==1) && (spcDRead == 0)){
             flagCruzamento = 4; 
          }
          
@@ -83,13 +100,13 @@ void loop() {
             }
           }
           
-          else if ((flagCruzamento == 2) && (spcRead == 1)){      //Cruzamento - sensor traseiro
+          else if ((flagCruzamento == 2) && (spcDRead == 1)){      //Cruzamento - sensor traseiro
                  flagCruzamento = 3; 
           }
-          else if ((flagCruzamento == 3 ) && (spcRead==0)) { //cruzamento
+          else if ((flagCruzamento == 3 ) && (spcDRead==0)) { //cruzamento
                 flagCruzamento = 4;
           }
-          else if ((spcRead == 1) && (flagCruzamento == 4)){         //Chegada
+          else if ((spcDRead == 1) && (flagCruzamento == 4)){         //Chegada
             off();  
             delay(20000);
             
@@ -129,8 +146,8 @@ void loop() {
   Serial.println(sdRead);
   Serial.println("");
   
-  Serial.println("spc");
-  Serial.print(spcRead);
+  Serial.println("spcD");
+  Serial.print(spcDRead);
   Serial.println("");
   Serial.print("contador ");
   Serial.println(flagCruzamento);
